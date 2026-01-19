@@ -11,10 +11,18 @@ from sqlalchemy import create_engine
 # DB_PASS = "0816"   # <--- Your Password
 # DB_NAME = "ecopack_db"
 # DB_HOST = "localhost"
-DATABASE_URL = os.getenv("postgresql://neondb_owner:npg_wLV9zEcHyZ8h@ep-little-sun-ah1ijpio-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Ensure the engine uses this new URL
-engine = create_engine(DATABASE_URL)
+if DATABASE_URL is None:
+    raise RuntimeError("❌ DATABASE_URL is NOT set in Render Environment Variables")
+
+# Fix for SQLAlchemy + postgres
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace(
+        "postgres://", "postgresql+psycopg2://", 1
+    )
+
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 # --- LOAD ML MODELS (The "Brains") ---
 # We load them once at startup so we don't waste time reloading for every request
 # --- LOAD ML MODELS ---
