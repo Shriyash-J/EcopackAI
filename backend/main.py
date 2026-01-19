@@ -13,16 +13,13 @@ from sqlalchemy import create_engine
 # DB_HOST = "localhost"
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL is None:
-    raise RuntimeError("❌ DATABASE_URL is NOT set in Render Environment Variables")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL not set")
 
-# Fix for SQLAlchemy + postgres
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace(
-        "postgres://", "postgresql+psycopg2://", 1
-    )
-
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True
+)
 # --- LOAD ML MODELS (The "Brains") ---
 # We load them once at startup so we don't waste time reloading for every request
 # --- LOAD ML MODELS ---
