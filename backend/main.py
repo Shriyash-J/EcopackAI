@@ -35,8 +35,7 @@ except Exception as e:
 app = FastAPI(title="EcoPackAI API", description="AI-Powered Packaging Recommender & Predictor")
 
 # Database Connection
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:5432/{DB_NAME}"
-engine = create_engine(DATABASE_URL)
+
 
 # --- INPUT MODELS ---
 
